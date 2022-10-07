@@ -1,0 +1,6 @@
+[submodule "statistics_II\\inferencia"]
+	path = statistics_II\\inferencia
+	url = ./statistics_II\\inferencia
+[submodule "statistics_II\\Muestreo"]
+	path = statistics_II\\Muestreo
+	url = ./statistics_II\\Muestreo
