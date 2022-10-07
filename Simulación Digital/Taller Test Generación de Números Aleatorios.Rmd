@@ -1,0 +1,109 @@
+---
+title: "Taller Generación de Números Aleatorios"
+subtitle: Simulación Digital - Grupo H1
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+  html_notebook: default
+---
+
+2170688- Brayan Rodolfo Barajas Ochoa
+
+#Solución
+1. Se implementa la siguiente función para desarrollar el método de cuadrados medios de Von Neumann.
+
+Debido a que mi código termina en 0688, para que el algoritmo funcione apropiadamente, se omitirá el 0 y se tomará el siguiente dígito, de tal forma que queda 7688.
+
+Para obtener los dígitos centrales, se emplea una fórmula implementada en la siguiente función.
+```{r}
+met.cuad.med<-function(n,semilla=7688,k=4){
+  u<-numeric(n)
+  for(i in 1:n) {
+    s2<-semilla^2 #se eleva al cuadrado la semilla
+    semilla<-floor((s2-floor(s2/(10^(2*k-k/2)))*10^(2*k-k/2))/10^(k/2)) #se obtienen los dígitos centrales
+    u[i]=semilla/10^k #se obtiene el valor entre 0 y 1
+  }
+  return(u)
+}
+```
+
+```{r}
+s<-met.cuad.med(10) #obtención de los 10 primeros dígitos generados por el método
+s
+```
+A continuación, se crea la función para el test de Kolmogorov Smirnov tal como se vio en clase.
+
+```{r}
+test.ks<-function(d){
+  d=sort(d) #se ordenan los datos
+  n=length(d) #se obtiene la cantidad de datos
+  por=seq(1/n,1,1/n)
+  D=abs(d-por) #Se hace el valor absoluto la diferencia
+Dmax=max(D) #Se obtiene el máximo
+  return(Dmax)
+}
+```
+
+Luego, se le aplica el test al conjunto de 10 valores generado anteriormente.
+
+```{r}
+ks1=test.ks(s)
+ks1
+```
+Se comprueba que el resultado obtenido concuerde con la función que tra por defecto R para este test, siendo satisfactorio.
+
+```{r}
+ks2=ks.test(s,'punif')
+ks2
+```
+
+Ahora, para un nivel de significancia de 0.01 y un N=10, se tiene que el valor crítico es de 0.41, al compararlo con la D obtenida se observa que esta es mayor, por lo tanto es posible rechazar la hipótesis nula, es decir, el conjunto de datos generados no proviene de una distribución uniforme.
+
+2. Ahora, para el punto 2 se crea la función para el test de chi cuadrado de la siguiente forma:
+
+```{r}
+chisquared<-function(d,n){
+  interv=1/n #Se obtiene el tamaño de cada intervalo
+  O=numeric(n) #Se crea el vector para O
+  for(i in 1:n) {
+    O[i]=length(d[d>=(i-1)*interv & d<i*interv]) #Se obtiene la cantidad de datos para cada intervalo
+  }
+  E=length(d)/n #Se obtiene la cantidad "teórica" de cada intervalo
+  r=sum(((O-E)^2)/E) #Se calcula el resultado final
+  return(r)
+}
+```
+
+Luego de tener esta función, se generan 1000 valores con el método de cuadrados medios y se procede a evaluar con la función recién creada.
+
+```{r}
+s2=met.cuad.med(1000)
+cs1=chisquared(s2,15)
+cs1
+```
+Para asegurar que esta función trabaja adecuadamente, se compara el resultado obtenido con la función por defecto de R para este test, obteniendo el mismo. La función de R recibe la O ya calculada con la cantidad respectiva para cada intervalo, por lo que es necesario calcularla previamente.
+
+```{r}
+n=15 #Cantidad de intervalos
+interv=1/n #Tamaño de intervalo
+#Se obtiene la O
+O=numeric(n)
+for(i in 1:n) {
+    O[i]=length(s2[s2>=(i-1)*interv & s2<i*interv])
+}
+#SE evalúa con la función de R
+cs2=chisq.test(x=O)
+cs2
+
+```
+
+El valor obtenido de 2508.7 se debe comparar con el valor crítico dado un nivel de significancia de 0.025 y 14 grados de libertad debido a que son 15 intervalos, este valor crítico es de 26.1. A partir de que el valor obtenido en el test es mucho mayor, se puede negar la hipótesis nula y concluir que el conjunto de datos no sigue una distribución uniforme.
+
+```{r}
+1-ppois(16,12)
+```
+```{r}
+rpois(10,12)
+
+```

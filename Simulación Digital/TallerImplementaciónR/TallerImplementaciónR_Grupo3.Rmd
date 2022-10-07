@@ -1,0 +1,95 @@
+---
+title: "Actividad programación en R"
+subtitle: Simulación Digital
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+  html_notebook: default
+---
+
+2172016- Kevin Javier Lozano Galvis  
+2170688- Brayan Rodolfo Barajas Ochoa  
+2161342- Carlos Alberto Palencia Pombo    
+
+
+2.  El caballero de Méré es un apostador empedernido. Ha decidido consultarle el
+siguiente problema:<br><cite>“Juego frecuentemente a los dados. ¿Por qué si lanzo un dado 4 veces y apuesto a que en alguno de los lanzamientos sale un 6, tengo más posibilidades de ganar que cuando lanzo dos dados 24 veces y apuesto a que en algún lanzamiento sale un doble 6? ¿Acierto o estoy equivocado?”
+</cite>
+
+Para encontrar la respuesta a esto por medio de una simulación, se debe una cantidad considerable de experimentos en donde cada uno consiste en lanzar cuatro veces un dado y comprobar si en algún momento salió el número 6, además de lanzar veinticuatro veces dos dados y comprobar que en alguna de estas hayan salido en ambos dados el número 6. Luego, se cuenta cuántos éxitos se obtuvieron en cada caso para hallar el porcentaje y compararlos para determinar cuál tiene mayor probabilidad; si es el primer caso, que es lanzar un dado cuatro veces y obtener un 6 en alguno de los lanzamientos, entonces el caballero tenía razón
+
+<strong>Implementación:</strong>
+
+En el caso 1, de 4 lanzamientos de un dado, se obtienen los 4 lanzamientos por medio de la función runif pero es necesario hacerle algún tipo de redondeo debido a que esta función trabaja con valores decimales, para esto se utiliza la función floor ya que se generarán valores entre 1 y 7. Luego, la función match busca si existe algún valor de 6 entre los 4 lanzamientos, de ser así, se cuenta como un éxito para el caso 1.
+
+En el caso 2, de 24 lanzamientos con 2 dados, se realiza un ciclo for para los 24 lanzamientos, en cada uno de ellos se obtienen los 2 valores de los dos dados con la función runif de la misma forma que se realizó en el caso 1; luego, si ambos números son 6, es decir, la suma entre ellos es 12, se cuenta como 1 éxito y se sale del ciclo debido a que se requiere al menos un resultado de este tipo.
+
+Por último, se calcula el porcentaje de cada caso y se compara para determinar si el caballero tenía razón.
+
+```{r}
+n=10000 #n es la cantidad de experimentos
+nexito1=0 # inicializar cantidad de éxitos del caso 1
+nexito2=0 # inicializar cantidad de éxitos del caso 2
+for(i in 1:n){ #Iteraciones del experimento
+  
+  #Simulación de 4 lanzamientos de un dado y verificación de al menos un 6 
+  if(!is.na(match(6,floor(runif(4, min = 1, max = 7))))){
+    nexito1=nexito1+1
+  }
+  
+  #Simulación de 24 lanzamientos
+  for(d in 1:24){
+    #Obtención de dos dados
+    lanzamientos=floor(runif(2, min = 1, max = 7))
+    #Si la suma es igual a 12, es decir, ambos dieron 6, se considera un éxito y
+    #se finaliza la simulación de 24 lanzamientos
+    if(lanzamientos[1]+lanzamientos[2]==12){
+      nexito2=nexito2+1
+      break
+    }
+  }
+  
+}
+prob1=nexito1/n #Probabilidad del caso 1
+prob2=nexito2/n #Probabilidad del caso 2
+print('Porcentaje caso 1: ')
+print(prob1)
+print('Porcentaje caso 2: ')
+print(prob2)
+if(prob1>prob2){ #Si el porcentaje del caso 1 es mayor, el caballero tenía
+  print('El caballero tenía razón')
+}
+```
+
+A continuación, se realiza la misma implementación, con la única diferencia que para simular el valor de los dados se utiliza la función sample ya que devuelve valores enteros entre el rango especificado.
+
+```{r}
+n=10000
+nexito1=0
+nexito2=0
+for(i in 1:n){
+  
+  if(!is.na(match(6,sample(1:6,4,replace=T) ))){
+    nexito1=nexito1+1
+  }
+  
+  for(d in 1:24){
+    lanzamientos=sample(1:6,2,replace=T)
+    if(lanzamientos[1]+lanzamientos[2]==12){
+      nexito2=nexito2+1
+      break
+    }
+  }
+  
+}
+prob1=nexito1/n
+prob2=nexito2/n
+print(prob1)
+print(prob2)
+if(prob1>prob2){
+  print("El caballero tenía razón")
+}
+```
+
+

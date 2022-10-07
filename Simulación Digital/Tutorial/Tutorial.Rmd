@@ -1,0 +1,772 @@
+---
+title: "Tutorial en R"
+subtitle: Simulación Digital
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+  html_notebook: default
+---
+
+2172016- Kevin Javier Lozano Galvis  
+2170688- Brayan Rodolfo Barajas Ochoa  
+2161342- Carlos Alberto Palencia Pombo    
+
+### ¿Qué es R?
+
+R un lenguaje orientado a objetos dedicado al ánalisis estadístico y gráfico. Es un lenguaje interpretado y no compilado, lo cual significa que los comandos escritos en el teclado son ejecutados directamente sin necesidad de construir ejecutables. Todas las acciones en R se realizan con objetos que son guardados en la memoria activa del ordenador, sin usar archivos temporales.  
+
+R hace uso de librerías o paquetes, los cuales fortalecen el funcionamiento del lenguaje. Algunas funciones elementales para el manejo de estos son:
+
+- install.packages(): para instalar librerías
+- library(): cargar determinada librería
+- help(): obtener información acerca de una función de cierta librería
+
+### Variables
+Las variables nos ayudan a almacenar un valor para usarlo en algún procedimiento. Para hacer la asignación a alguna variable se usa el operador `<-`. A continuación ejemplos de asignación  
+
+```{r}
+x <- 5
+pais <- "Colombia"
+```
+
+
+
+### Estructuras de Control
+
+R al igual que muchos lenguajes de programación tambieén posee unas estructuras que permiten controlar el flujo de ejecución de una secuencia de comandos ya sea mediante la toma de una decisión o la ejecución en un bucle definido o indefenido. Estas estructuras son conocidas como **Estructuras de Control**.  
+
+Las estructuras de control más utilizadas en R son:  
+- **if/else**: nos permite tomar una decisión respecto a qué código ejecutar dependiendo de que una condición se cumpla o no.  
+- **switch**: toma la desición dependiendo del valor de una variable.
+- **for**: Permite la ejecución de un bucle un número de veces determinado.  
+- **while**: Ejecuta un bucle mientras se cumple una determinada condición.  
+- **repeat**: Permite que un bucle se ejecute indefinidamente y solo se detiene mediante el uso del comando *break*.  
+- **break**: Este comando sirve la detener la ejecución de un bucle.  
+- **next**: Nos permite saltarnos a la siguiente ejecución de un codigo dentro de un bucle.  
+
+
+#### IF/ELSE  
+
+Nos permite actuar en función de una decisión. Existen tres formas de usar esta estructura de control. Miremos su sintaxis en cada una de estas formas: 
+
+- Usar solo el *if*, esta forma se utiliza cuando solo queremos ejecutar un codigo si la condición es verdadera y si llegase a ser falsa, se continúa con la ejecución normal sin ejecutar el codigo dentro del if.  
+```
+...
+if(<condicion>) {
+  # Bloque de código si la condición es verdadera
+}
+...
+```
+
+- Usar el *if* y el *else*, esta forma se utiliza cuando se necesita evaluar una condición y dependiendo de que sea falsa o verdadera se ejecuta un bloque de código u otro bloque de código.  
+```
+...
+if(<condicion>) {
+  # Bloque de código si la condición es verdadera
+} else {
+  # Bloque de código si la condición es falsa
+}
+...
+```
+
+- Usar el *if*, el *else* y *else if*, aquí se van evaluar varias condiciones y dependiendo de cual sea falsa o verdadera se ejecuta un bloque de código y si ninguna condición es verdadera se ejecutará el bloque de código del *else*. Esta estructura se usa poco debido al uso del *SWITCH* debido a que esta tiene un uso similar.  
+```
+...
+if(<condición1>) {
+  # Bloque de código si la condición1 es verdadera
+} else if(<condición2>) {
+  # Bloque de código si la condición2 es verdadera
+} else {
+  # Bloque de código si la condición1 y condición2 son falsa
+}
+...
+```
+
+Miremos un ejemplo:
+
+```{r}
+x <- runif(1,0,10) ## creamos un numero aleatorio entre 0 y 10
+print(x);
+if( x > 5 ){
+  print("El numero es mayor de 5");
+} else if(x == 5) {
+  print("El numero es igual que 5");
+} else {
+  print("El numero es menor que 5")
+}
+```
+
+#### SWITCH
+
+Tiene un uso similar al *IF/ELSE* con la diferencia de que *SWITCH* toma la decisión dependiendo del valor de una variable y ejecuta un bloque de código en funcion de cada valor posible de dicha variable.  
+
+Su sintaxis es la siguiente:  
+```
+...
+switch(<EXPR>,
+      <valor_1> {# código}
+      ....
+      <valor_n> {# código})
+...
+```
+
+Ejemplo:  
+
+```{r}
+x <- 1:10;
+type <- 'mean';
+switch(type,
+        mean = mean(x),
+        median = median(x),
+        sd= sd(x))
+```
+#### FOR
+
+El bucle `for` recorre los elementos de una lista o un vector de forma consecutiva y lo asigna a una variable y con esta variable se ejecuta el código de bloque necesario. Se termina cuando llegue al final de la lista o vector.  
+
+Su sintaxis es la siguiente:
+```
+...
+for(<variable> in <objeto iterable>) {
+  # Bloque de código
+  ...
+}
+...
+```
+
+Ejemplo:
+
+```{r}
+for(i in 0:9) {
+  print(i)
+}
+```
+
+#### WHILE
+
+El bucle `while` comprueba una condición y si esta es verdadera ejecuta el bloque de código. Una vez finalice la ejecución del código, vuelve a comprobar la condición y si es verdadera procede nuevamente a la ejecución del bloque de codigo. Finaliza cuando la condición sea falsa o cuando encuentre un `break`.  
+
+Su sintaxis es la siguiente:  
+```
+...
+while(<condición>) {
+  # Bloque de código
+  ...
+}
+...
+```
+
+Ejemplo:
+
+```{r}
+cont <- 0; # Se crea una variable para la condición, importante esta variable debe
+          # modificarse dentro del bloque del codigo del ciclo while para que en
+          # algun momento la condición cambie y sea falsa y no caer en un bucle
+          # infinito.
+while(cont < 10) {
+  print(cont);
+  cont <- cont + 1;
+}
+```
+
+
+#### REPEAT
+
+La estructura `repeat` ejecuta un bucle infinito, únicamente detenido por un `break`.  
+
+Su sintaxis es la siguiente:  
+```
+...
+repeat {
+  # Bloque de código
+  ...
+  if(<condición de parada>) break;
+}
+...
+```
+
+Ejemplo:
+
+```{r}
+cont <- 9;
+repeat {
+  print(cont);
+  cont <- cont - 1;
+  if(cont < 5) break;
+}
+```
+#### NEXT / BREAK
+
+El `next` se utiliza para finalizar un ciclo de un bucle en ejecución y pasar al siguiente ciclo. 
+
+
+Ejemplo:
+
+Imprimir todos los numeros pares de 1 a 10.  
+
+```{r}
+for(i in 1:10) {
+  if(i %% 2 != 0) next; # Si el numero no es par, no ejecuta el print(i) y se salta al otro ciclo.
+  print(i);
+}
+```
+El `break` se utiliza cuando se quiere finalizar por completo un bucle sin que la condición para terminarlo se cumpla.  
+
+```{r}
+cont <- 0
+while(cont < 10) {
+  x <- runif(1,0,10);
+  print(cont);
+  cont <- cont+1
+  print(x)
+  if(x < 5) break;
+}
+```
+### Tipos de objetos
+
+En R existen diferentes tipos de objetos que permiten que el usuario pueda almacenar la información para realizar procedimientos estadísticos y gráficos. A continuación, se presentan las características de estos objetos y la manera de crearlos. 
+
+### Variables
+
+Las variables, que ya fueron mencionadas anteriormente, son un tipo de objeto
+
+### Vectores
+
+Los vectores son la estructura de datos mas sencilla usada en R y se puede definir como una colección de datos de **un mismo tipo** y no es posible mezclar datos de diferentes tipos dentro de un mismo vector, y por eso se llaman **vectores atómicos**.  
+
+Poseen 3 propiedades:   
+- Tipo: `typeof` - El vector al contener elementos de un solo tipo, se puede decir que si un vector contiene datos numéricos, el vector sera de tipo numérico.  
+- Largo: `lenght` - Cantidad de elementos que contiene el vector.  
+- Atributos: `attributes` - metadatos adicionales  
+
+#### Creación de vectores
+
+Para la creación de vectores se usa la funcion `c()` *(combinar)*. Esta función recibe como argumentos cada uno de los elementos que se van a añadir en el vector separados por coma.  
+ 
+```{r}
+vectnumerico <- c(1,2,3,4,5,6,7,8)
+vectnumerico
+```
+```{r}
+vectlogico <- c(T, F, TRUE, FALSE, T, T, T, F)
+vectlogico
+```
+```{r}
+vectcadena <- c("Hola", "como", "donde")
+vectcadena
+```
+Para extraer elementos del vector, indicamos la posición con corchetes `[]`. Por ejemplo, si del vector cadena se quiere obtener "donde"
+
+```{r}
+vectcadena[3]
+```
+
+#### Vectorización de operaciones
+
+Los vectores también se pueden operar y a continuación mostraremos un ejemplo de esto
+
+```{r}
+mivector <- c(0,1,2,3,4,5,6,7,8,9) #creamos nuestro vector para hacer las pruebas
+ print("suma")
+ print(mivector + 2) # como vemos podemos realizar la suma directamente sobre 
+                     # el vector sin necesidad de acudir a un ciclo for para
+                     # sumar elemento por elemento. de esta misma forma se puede 
+                     # realizar con cada operacion, ya sea numericas, logicas o 
+                     # con el manejo de caracteres. 
+``` 
+
+```{r}
+# Para las operaciones relaciones se obtiene un vector de true o false si cumple o no la condicion
+mivector == 5 
+```
+
+#### Operaciones estadísticas
+A continuación se presentarán los comandos para realizar operaciones estadísticas con vectores
+
+| Operación  | Sintaxis   |
+| ---------- | ---------- |
+| Media      | mean()     |
+| Mediana    | median()   |
+| Máximo     | max()      |
+| Mínimo     | min()      |
+| Cuantiles  | quantile() |
+| Suma Acumulada| cumsum()|
+| Producto Acumulado| cumprod()|
+| Diferencias| diff()     |
+| Coeficiente de Correlación| cor()|
+
+Todas las operaciones se hacen respecto a un vector x.  
+
+Por ejemplo, si se desea calcular la media del vector número creado anteriormente 
+
+```{r}
+media<-mean(vectnumerico) # Cálculo de la media del vector.
+media
+```
+O si desea calcular los cuantiles
+
+```{r}
+cuan<-quantile(vectnumerico)
+cuan
+```
+Y así con las otras operaciones estadísticas. 
+
+Una de las desventajas de los vectores, es que estos solo pueden trabajar con un único tipo de datos, mientras que las listas permiten la mezcla de datos dentro de sus elementos, es decir dentro un vector solo pueden haber elementos de tipo numérico, mientras que una lista pueden haber elementos de diferente tipo: numérico, lógico, character e incluso hasta una lista y un arreglo. Más adelante se profundizará sobre este tema. 
+
+Además, respecto a los arreglos, los vectores tienen una sola dimensión, mientras que los arreglos son de más de dos dimensiones. Más adelante se muestra un ejemplo de esto.
+
+### Matrices
+
+Una estructura de datos de uso común en R son las matrices. Estas se distinguen por tener dos dimensiones, un largo y un alto, y únicamente pueden contener datos de un sólo tipo. Las matrices son, por lo tanto, una estructura con forma rectangular, con filas y columnas.  
+
+#### Creación de matrices
+
+Las matrices en R se crean con la función `matrix()`. La función `matrix()` acepta dos argumentos, `nrow()` y `ncol()`. Con ellos se define el número de renglones y columnas que tendrá nuestra matriz, veamos un ejemplo 
+
+```{r}
+# Cuatro columnas y tres columnas
+matrix(1:12, nrow = 4, ncol = 3)
+```
+Otra manera para crear las matrices en la unión de vectores, que se realiza con las siguientes funciones:  
+
+- `cbind()` se usa para unir vectores, cada uno como una columna.
+- `rbind()` se usa para unir vectores, cada uno como un renglón.
+
+Por ejemplo, tenemos cuatro vectores
+
+```{r}
+vector_1 <- 1:3
+vector_2 <- 4:6
+vector_3 <- 7:9
+vector_4 <- 10:12
+```
+
+Si queremos unirlos como matriz, de tal forma que cada vector será una columna
+
+```{r}
+matriz <- cbind(vector_1, vector_2, vector_3, vector_4)
+matriz
+```
+Si por el contrario, queremos que cada vector sea un renglón o fila
+
+```{r}
+matriz <- rbind(vector_1, vector_2, vector_3, vector_4)
+matriz
+```
+Para extraer elementos almacenados dentro de una matriz, se usan los corchetes `[ , ]`, donde se ingresa el número de fila y el número de columna que nos interesa. Por ejemplo si de la matriz anterior se quiere obtener el valor 9
+
+```{r}
+matriz[3,3]
+```
+
+#### Operaciones matriciales
+
+Las operaciones aritméticas también son vectorizadas al aplicarlas a una matriz. La operación es aplicada a cada uno de los elementos de la matriz. 
+
+```{r}
+matriz + 3
+```
+De esta manera se puede sumar, multiplicar y elevar a la potencia una matriz con un valor. Ahora, si tenemos dos matrices 
+
+```{r}
+A<- matrix(1:4, nrow = 2, ncol = 2)
+A
+B<- matrix(1:4, nrow = 2, ncol = 2)
+B
+```
+Si queremos realizar una suma entre ellas, se realiza
+
+```{r}
+S<- A + B
+S
+```
+De la misma manera, se realizan el resto de operaciones aritméticas como suma, resta, multiplicación y potencias.  
+
+#### Operaciones de álgebra lineal de matrices
+
+Ahora, podemos ver las operaciones que se realizan con matrices en la siguiente tabla  
+
+
+| Operación   | Sintaxis   |
+| ----------  | ---------- |
+| Transpuesta | t()        |
+| Diagonal    | diag()     |
+| Traza       | sum(diag())|
+| Determinante| det()      |
+| Inversa     | solve()    |
+| Descomposición| qr()     |
+| Rango       | qr()$rank  |
+| Varianza    | var()      |
+
+Por ejemplo, si se desea calcular la transpuesta de la matriz A creada anteriormente
+
+```{r}
+A.t<-t(A)    # La transpuesta de la matriz A.
+A.t
+```
+O si se desea calcular el determinante de la matriz B
+
+```{r}
+B.d<-det(B)    # Determinante de la matriz B.
+B.d
+```
+### Arreglos 
+
+Un arreglo es una matriz de varias dimensiones con información numérica, alfanumérica o lógica. Para construirlos se usa la función `array()`. La función acepta como argumento `data` que sirve para indicar los datos que se van a almacenar en el arreglo y el argumento `dim` sirve para indicar las dimensiones del arreglo. Por ejemplo, para crear un arreglo de 4x3x2 con las primeras 24 letras del alfabeto
+
+```{r}
+miarray <- array(data=letters[1:24], dim=c(4, 3, 2))
+miarray
+```
+Para extraer los elementos de un array se indican en los corchetes las coordenadas del objeto de interés 
+
+```{r}
+miarray[1,3,2]
+```
+### Data frames
+
+El data frame es uno de los objetos más utilizados porque permite agrupar vectores con información de diferente tipo en un mismo objeto en forma de tabla, la única restricción es que los vectores deben tener la misma longitud. Para crearlos se usa la función `data.frame()`.  
+
+```{r}
+x <- data.frame(Titulacion = c("Economía", "ADE", "Sociología", "Magisterio"), Edad = c(26, 22, 23, 26))
+x
+```
+Para extraer las variables almacenadas en un data frame se puede usar el operador `$`, corchetes simples `[]` o corchetes dobles `[[]]`. A continuación algunos ejemplos, si se desea extraer la edad
+
+```{r}
+x$Edad
+```
+Otra forma, es indicando el número de la columna
+
+```{r}
+x[,2]
+```
+Y por último, se puede usar corchetes dobles con el nombre de la variable
+
+```{r}
+x[["Edad"]]
+```
+#### Manejo y visualización de Dataframes
+
+Para mostrar el manejo y las diferentes formas de visualización por medio de gráficos de los dataframes, se hará uso de un dataframe muy conocido, debido a que viene por defecto en <strong>R</strong>, llamado <i>"iris"</i>.
+```{r}
+#Para acceder al dataframe solo se necesita escribir ebay
+str(iris) #información de la estructura de iris
+```
+Para obtener una visualización del principio del dataframe se utiliza la función head(), si se quiere obtener los últimos datos se utiliza tails
+```{r}
+head(iris,8) # el segundo parámetro indica la cantidad de elementos que se quieren visualizar
+#tails(iris,3)
+```
+La función <i>summary()</i> permite obtener información estadística básica de los datos numéricos.
+```{r}
+summary(iris)
+```
+Dentro de la librería <i>Hmisc</i> se encuentra la función <i>describe()</i>, que permite obtener información descriptiva del objeto que se pasa como primer parámetro.
+```{r}
+library(Hmisc) #Se importa la librería Hmisc
+describe(iris)
+```
+El dataframe permite ser manipulado de distintas formas, como por ejemplo, ser ordenado de acuerdo a una columna
+```{r}
+IrisOrdenado <- iris[order(iris$Petal.Width), ]
+head(IrisOrdenado)
+```
+
+Para la visualización de datos, se pueden utilizar, las funciones base de R. La primera gráfica que se muestra es la de nubes de puntos, con la cual se puede obtener una primera aproximación de las relaciones existentes entre variables, así como se puede agrupar por colores de acuerdo a variables categóricas. 
+
+```{r}
+#Con la función plot se pueden generar muchos tipos de gráficas, de acuerdo a los parámetros suministrados
+plot(iris$Petal.Length, iris$Petal.Width, col = iris$Species, pch = 19, xlab = 'Longitud del pétalo', ylab = 'Ancho del pétalo')
+#La función title permite dar título a la gráfica
+title(main = 'IRIS',sub = 'Exploración de los pétalos según especie',col.main = 'blue', col.sub = 'blue')
+#La función legend permite etiquetar los elementos de la gráfica
+legend("bottomright", legend = levels(iris$Species),col = unique(iris$Species), ncol = 3, pch = 19, bty = "n")
+```
+
+Otro tipo de gráfica que ayuda en la visualización de los datos es la gráfica de caja.
+```{r}
+#Boxplot es la función para hacer este tipo de gráficas
+boxplot(Petal.Length ~ Species, data = iris) 
+title(main = 'IRIS',sub = 'Análisis de pétalo por familia')
+
+```
+
+Otro tipo de gráfica importante son los histogramas, que pueden realizarse para todo el dataframe o para una columna en particular.
+```{r}
+#hist() es la función para realizar histogramas, en este caso, a todo el dataframe
+hist(iris)
+
+```
+
+Para analizar la relación entre atributos, se puede realizar mediante nubes de puntos
+```{r}
+plot(iris[ ,1:4], col = iris$Species) #Se toman las columnas numéricas y se deja la categórica para determinar el color
+```
+
+Además, es importante determinar la correlación entre las variables, para esto se tienen dos opciones, con la función <i>plotcorr()</i> del paquete <i>ellipse</i>, o la función <i>corrplot()</i> del paquete <i>corrplot</i>.
+Para mostrar esta comparación, también se mostrará cómo mostrar agrupar dos gráficas.
+```{r}
+library(ellipse)
+library(corrplot)
+
+corr.rel<-rcorr(as.matrix(iris[ ,1:4])) #se define le matriz de correlación
+M <- corr.rel$r #Se guarda la matriz de correlación
+p_mat <- corr.rel$P #Se guarda la matriz de P
+
+par(mfrow = c(1, 2)) #esta función permite determinar una "matriz de gráficas, de acuerdo a filas y columnas 
+plotcorr(cor(iris[ ,1:4]), col = heat.colors(10)) #función de la librería ellipse
+corrplot(M, order = "hclust", p.mat = p_mat, sig.level = 0.05) #Función corrplot
+```
+
+Además, existe la librería <strong><i>ggplot2</i></strong>, que permite realizar estos gráficos y algunos más con diversas opciones de visualización. A continuación se muestran algunas de ellas. Además, se muestra la función <i>ggarragne</i> que sirve para agrupar gráficas pertenecientes a esta librería.
+```{r}
+library("ggplot2")#Librería para graficar
+library("ggpubr")#Librería para agrupar
+
+#Histograma
+a<-ggplot(data = iris) +
+  geom_histogram(mapping = aes(x = Sepal.Length), binwidth = 0.4)
+
+#Gráfico de Caja
+
+b<-ggplot(iris, aes(Species, Petal.Length)) +
+       geom_boxplot()
+
+#Nube de puntos 
+
+c<-ggplot(iris, aes(Petal.Length, Petal.Width, color=Species)) +
+       geom_point()+
+      geom_smooth(method = "lm") #esta permite realizar una "regresión" gráfica
+
+
+figure <- ggarrange(a, b, c,
+                    labels = c("A", "B", "C"),
+                    ncol = 2, nrow = 2)
+figure
+```
+
+
+### Listas
+Las listas son otro tipo de objeto usado para almacenar objetos y se crea con `list()`. A diferencia de los vectores o matrices, las listas pueden contener elementos/componentes de distinto tipo. Observemos esta lista que tiene 5 componentes.
+
+```{r}
+x <- list(c(1,2,3,4), "Curso", F, 1+2i, 3L)
+x
+```
+Para extraer los elementos de la lista usamos el doble corchete
+
+```{r}
+x[[3]]
+```
+### Importar Datos 
+
+Debido a la importancia del manejo de datos, R permite importar conjuntos de datos que tengan algún tipo de organización, comunmente conocido como tablas ya que se organizan por medio de filas y renglones. Para esto, el único requisito es precisamente que el archivo este organizado por renglones y que, para identificar las columnas, cuente con un separador (Ej: , ; | ).
+
+R cuenta con funciones del paquete base que permiten realizar esta labor, que son:
+<br><p>
+- read.table(file, header = FALSE, sep = "", quote = "\"'", dec = ".", ...)
+- read.csv(file, header = TRUE, sep = ",", quote = "\"", dec = ".", fill = TRUE, comment.char = "", ...)
+- read.csv2(file, header = TRUE, sep = ";", quote = "\"", dec = ",", fill = TRUE, comment.char = "", ...)
+- read.delim(file, header = TRUE, sep = "\t", quote = "\"", dec = ".", fill = TRUE, comment.char = "", ...)
+- read.delim2(file, header = TRUE, sep = "\t", quote = "\"", dec = ",", fill = TRUE, comment.char = "", ...)
+</p>
+
+Como se puede observar, todas son muy similares entre sí, cambiando los valores predeterminados de unos cuantos parámetros lo cual las hace muy flexibles. Por otro lado, se encuentra la librería <i>readr></i>, la cual contiene 4 funciones equivalentes a las mencionadas anteriormente, que son:
+
+- read_csv(): para leer archivos con coma (“,”) como separador.
+- read_csv2(): para leer archivos con punto y coma (“;”) como separador.
+- read_tsv(): para leer archivos con tabulador (“\t”) como separador.
+- read_delim(,sep =’|’): para leer archivos con cualquier tipo de separador.
+
+Las funciones de la librería <i></i> presentan unas cuantas ventajas respectos a las de base:
+
+- Generalmente son mucho más rápidas (~10x) que sus equivalentes. Los trabajos que tienen un tiempo de ejecución prolongado poseen una barra de progreso para que puedas ver qué está ocurriendo. Si solo te interesa la velocidad, prueba data.table::fread(). No se ajusta tan bien con el tidyverse, pero puede ser bastante más rápido.
+
+- Producen tibbles, no convierten los vectores de caracteres a factores, no usan nombres de filas ni distorsionan los nombres de columnas. Estas son fuentes comunes de frustración al utilizar las funciones de R base.
+
+- Son más reproducibles. Las funciones de R base heredan ciertos comportamientos de tu sistema operativo y de las variables del ambiente, de modo que importar código que funciona bien en tu computadora puede no funcionar en la de otros.
+
+#### Ejemplo
+Para ver cómo se utiliza esto, lo primero que se hará será obtener un dataframe de internet por medio de una URL; para esto hay dos opciones, leer directamente los datos desde internet utilizando alguna de las funciones mencionadas anteriormente, o descargando una copia del archivo al ordenador para posteriormente leerlo. Ambos casos son mostrados a continuación.
+```{r}
+url <- "https://raw.githubusercontent.com/datasciencelabs/data/master/bio260-heights.csv"
+#Se obtiene directamente de internet utilizando read.csv() 
+datos <- read.csv(url)
+class(datos)
+head(datos)
+```
+```{r}
+#Ahora se realizará con la librería readr
+library(readr)
+url <- "https://raw.githubusercontent.com/datasciencelabs/data/master/bio260-heights.csv"
+destino <- "./bio260-heights.csv" #Ruta para el archivo a descargar
+download.file(url, destino) #se descarga el archivo
+datos2 <- read_csv(destino) #Se lee el archivo descargado
+class(datos2)
+head(datos2)
+```
+También se pueden encontrar otros tipos de archivos como tipo excel, SPSS, stata, SAS, entre otros que, pueden ser tanto importados como exportados con la librería correspondiente.
+
+Por último, una librería que puede resultar muy útil es <i>rio></i>, ya que con la función import() o export() reconoce la mayoría de tipos de archivos mencionados anteriormente y hace la tarea correspondiente.
+```{r}
+library(rio)
+datos3<-import(destino)
+class(datos3)
+head(datos3)
+```
+
+
+
+### Distribuciones de probabilidad en R
+
+Para implementar las distintas funciones de cálculos asociados a distintas distribuciones de probabilidad existe el paquete `stats` de R.  
+
+| Discretas   | Nombre en R| Continuas    | Nombre en R| 
+| ------------| ---------- | -------------| -----------|  
+| Binomial    | binom      | Uniforme     | unif       |  
+| Poisson     | pois       | Normal       | norm       |  
+| Geométrica  | geom       | t-Student    | t          |  
+| Hipergeométrica| hyper   | F-Fisher     | F          |  
+| Binomial negativa| nbinom| Chi-cuadrado | chisq      |  
+|             |            | Exponencial  | exp        |  
+|             |            | Gamma        | gamma      |  
+|             |            | Weibull      | weibull    |  
+|             |            | W de Wilcoxon| wilcox     |  
+
+Para cada distribución, R dispone de cuatro funciones. Se puede acceder a cada una de ellas simplemente precediendo el nombre de la distribución que figura en la tabla anterior por la letra que se indica a continuación:  
+
+`d`: función de densidad o de probabilidad.  
+`p`: función de distribución.  
+`q`: función para el cálculo de cuantiles.  
+`r`: función para simular datos con dicha distribución.  
+
+Ahora, algunos ejemplos para las distribuciones.  
+
+#### Ejemplo distribución binomial
+La distribución binomial o distribución binómica es una distribución de probabilidad discreta que cuenta el número de éxitos en una secuencia de <i>n</i> ensayos de Bernoulli independientes entre sí, con una probabilidad fija <i>p</i> de ocurrencia del éxito entre los ensayos.
+
+Considere un experimento binomial con n = 100 y p = 0.10.
+
+```{r}
+dbinom(11,100,0.10)#Se consigue la probabilidad de obtener 11 en una distribución de 100 en una probabilidad del 10%
+```
+```{r}
+pbinom(11,100,0.10)#Es la sumatoria de las probalibilidades que hay desde 0 a 11 en una distribución de 100 en una probabilidad del 10%
+```
+```{r}
+qbinom(0.60,100,0.10)#Es el numero que se obtiene con un porcentaje del 60 sabiendo que solo hay 10% de éxito
+```
+```{r}
+rbinom(11,100,0.10)#Son 11 valores que se pueden conseguir con 10% de probabilidad de éxito
+```
+Podemos representar la función de probabilidad de la distribución binomial
+
+```{r}
+plot(dbinom(0:20,100,0.10),type="h",xlab="k",ylab="P(X=k)",main="Función de Probabilidad B(100,0.10)")
+```
+También la función de distribución
+
+```{r}
+plot(stepfun(0:10,pbinom(0:11,100,0.10)),xlab="k",ylab="F(k)",main="Función de distribución B(100,0.10)")
+```
+
+#### Ejemplo distribución poisson
+La distribución de Poisson es una distribución de probabilidad discreta que expresa, a partir de una frecuencia de ocurrencia media $\lambda$, la probabilidad de que ocurra un determinado número de eventos durante cierto período de tiempo. 
+
+Considere una distribución de Poisson con valor esperado = 12.
+
+```{r}
+dpois(2,12)#La probabilidad de 2 con valor esperado de 12
+```
+```{r}
+ppois(2,12)#La sumatoria de 0 a 2 con un valor esperado de 12
+```
+
+```{r}
+qpois(0.40,12)#Número que consigue con un cuartil al 40% en un valor esperado de 12
+```
+```{r}
+rpois(4,12)#Son 4 valores que se pueden conseguir con un valor esperado de 12
+```
+Podemos representar la función de probabilidad de la distribución poisson
+
+```{r}
+plot(dpois(0:30,12),type="h",xlab="k",ylab="P(X=k)",main="Función de Probabilidad de Poisson")
+```
+
+También la función de distribución
+
+```{r}
+plot(stepfun(0:10,ppois(0:11,12)),xlab="k",ylab="F(k)",main="Función de distribución de Poisson")
+```
+
+#### Ejemplo distribución normal
+La distribución normal adapta una variable aleatoria a una función que depende de la media y la desviación típica. Es decir, la función y la variable aleatoria tendrán la misma representación pero con ligeras diferencias.
+
+```{r}
+calificaciones<-c(8.5,7.8,9.7,6.6,7.1,8,7,9,7.5,8.1)
+media<-mean(calificaciones)
+desv<-sd(calificaciones)
+dnorm(8,media,desv)#Densidad de los datos
+```
+```{r}
+pnorm(8,media,desv)#Probabilidad de que alguien saque 8
+```
+```{r}
+qnorm(0.43,media,desv)#Calificación respecto al 43%
+```
+
+
+```{r}
+rnorm(4,media,desv)#Cuatro calificaciones aleatorias
+```
+
+```{r}
+x=seq(-10,30,by=0.001)
+curve(dnorm(x,media,desv),xlim=c(4,12),col="blue",lwd=2,xlab="k",ylab="P(X=k)",main="Función de Probabilidad Normal")
+```
+
+```{r}
+curve(pnorm(x,media,desv),xlim=c(4,12),col="blue",lwd=2,xlab="k",ylab="F(k)",main="Función de distribución Normal")
+```
+
+#### Ejemplo distribución  t-Student
+La distribución t es una distribución de probabilidad que estima el valor de la media de una muestra pequeña extraída de una población que sigue una distribución normal y de la cual no conocemos su desviación típica.
+
+P(T >= 2.2010) con 11 grados de libertad
+
+```{r}
+pt(2.2010,11,lower.tail = FALSE)
+```
+
+```{r}
+dt(2,14)##Probabilidad de 2 con 14 grados de libertad
+```
+
+```{r}
+rt(2,14,20)#Dos valores con 14 grados de libertad
+```
+```{r}
+x=seq(-5,5,by=0.01)
+curve(dt(x,11),xlim=c(-5,5),col="blue",lwd=2,xlab="k",ylab="P(X=k)",main="Función de Probabilidad T-Student")
+```
+
+
+```{r}
+curve(pt(x,11),xlim=c(-5,5),col="blue",lwd=2,xlab="k",ylab="P(X=k)",main="Función de Distribución T-Student")
+```
+
+### Referencias
+- [Distribuciones de Probabilidad en R](http://estadistica-dma.ulpgc.es/cursoR4ULPGC/10-distribProbabilidad.html#distribuciones_de_probabilidad_en_r)
+- [R para principiantes](https://cran.r-project.org/doc/contrib/rdebuts_es.pdf)
+- [Tipos de Objetos](https://fhernanb.github.io/Manual-de-R/objetos.html)
+- [Operaciones con Matrices](https://rpubs.com/Cesar_AHN/operaciones_con_matrices_multiplicacion_determinante_inversa_factorizacion_descomposicion_grafica)
+- [Análisis epxloratorio y visualización de Datos con R](http://www.fcharte.com/libros/ExploraVisualizaConR-Fcharte.pdf)
+- [Exploración de datos en R](https://bookdown.org/matiasandina/R-intro/exploracion-de-datos.html)
+- [Visualización de datos en R](https://es.r4ds.hadley.nz/visualizaci%C3%B3n-de-datos.html)
+- [Análisis exploratorio de datos en R](https://es.r4ds.hadley.nz/an%C3%A1lisis-exploratorio-de-datos-eda.html)
+- [Importar (y exportar) datos en R](https://www.uv.es/pjperez/curso_R/tt_3_cargar_datos_v4.html#csv)
+- [Importación de datos en R (Hadley)](https://es.r4ds.hadley.nz/importaci%C3%B3n-de-datos.html)
+- [Cómo importar datos en R utilizando técnicas muy simples)](https://conceptosclaros.com/importar-datos-r/#El_roadmap_de_los_datos_brutos_a_informacion)

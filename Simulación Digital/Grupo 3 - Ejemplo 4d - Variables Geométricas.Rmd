@@ -1,0 +1,86 @@
+---
+title: "Generación de variables aleatorias geométricas"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+  html_notebook: default
+---
+
+**Integrantes**
+
+- 2172016 - Kevin Javier Lozano Galvis  
+- 2170688 - Brayan Rodolfo Barajas Ochoa  
+- 2161342 - Carlos Alberto Palencia Pombo    
+
+
+Recordemos que se dice que X es una variable aleatoria geométrica con el parámetro p si
+
+$$P\left\lbrace{X = i}\right\rbrace = pq^{i-1},\; i \geq 1,\; donde\ q=1-p$$
+
+Se puede pensar que X representa el momento del primer éxito cuando se realizan ensayos independientes, cada uno de los cuales es un éxito con probabilidad p. Desde
+
+$$ \sum_{i=1}^{j-1}p\{X=i\} = 1 - p\left\lbrace{X > j-1}\right\rbrace $$
+$$ = 1-p \left\lbrace{Las\ primeras\ pruebas\ de\ j-1\ son\ todas\ fallas}\right\rbrace$$
+                       
+$$ = 1 - q^{j-1},\ j\leq1 $$
+
+Podemos generar el valor de X generando un número aleatorio U y estableciendo X igual al valor j para el cual 
+
+$$ 1- pq^{i-1} \leq U < 1 - q^{j}$$
+
+O, de forma equivalente, para el cual 
+
+$$ q^{j} < 1 - U \leq q^{j-1}$$
+
+Es decir, podemos definir X por
+$$X = Min\{j:q^j <1-U\}$$
+
+Por lo tanto, usando el hecho de que el logaritmo es una función monótona, por lo que $a<b$ es equivalente a $log(a)<log(b)$, obtenemos que $X$ se puede expresar como:
+
+$$X = Min\{j : j\ log(q) < log(1 - U)\}$$
+$$= Min \left\lbrace{ j:j > \frac{log(1-U)}{log(q)}}\right\rbrace$$
+
+Donde la última desigualdad cambió de signo porque $log(q)$ es negativo para $0 < q < 1$. Por lo tanto, usando la notación Int() podemos expresar $X$ como
+
+$$X = int\left(\frac{log(1-U)}{log(q)}\right) + 1$$
+
+Por último, al observar que $1-U$ también está uniformemente distribuido en (0,1), se deduce que 
+
+$$X \equiv int\left(\frac{log(U)}{log(q)}\right) + 1$$
+
+también es geométrico con el parámetro p.
+
+A continuación, se implementa esto como una función en R para generar la variable aleatoria geométrica, teniendo como parámetros n (número de valores a generar) y p.
+
+```{r}
+geometric.gen<-function(n,p){
+  r=integer(n)
+  q=1-p
+  u=runif(n)
+  r=as.integer((log(u)/log(q))+1)
+  return(r)
+}
+```
+
+Al probarla, se obtiene el siguiente resultado: 
+
+```{r}
+nums<-geometric.gen(10,1/6)
+print(nums)
+```
+
+Para visualizar si los números que se generan siguen la distribución geométrica, se realiza lo siguiente: 
+```{r}
+nums<-geometric.gen(10000,1/6)
+freq <- prop.table(table(nums))
+  plot(freq)
+```
+
+Y se compara con la gráfica de densidad de la distribución geométrica. 
+```{r}
+ x <- seq(50)
+  plot(x, dgeom(x,1/6), "h")
+```
+ 
+ 

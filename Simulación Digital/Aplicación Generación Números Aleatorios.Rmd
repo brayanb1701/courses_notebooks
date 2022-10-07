@@ -1,0 +1,95 @@
+---
+title: "Números aleatorios"
+subtitle: Simulación Digital
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+  html_notebook: default
+---
+
+2170688- Brayan Rodolfo Barajas Ochoa
+
+1) Usando el método de evaluación de integrales usando números pseudoaleatorios, calcule el resultado de las siguientes expresiones:
+
+a) $\int_{-2}^{2} e^{x+x^2} \, dx$
+
+Se utiliza la sustitución $x=(b-a)y+a$ con lo cual queda $\int_{0}^{1} f((b-a)y+a) \, dy$.
+
+```{r}
+f_a <- function(x){
+  exp(x+x^2)
+}
+
+```
+
+```{r}
+curve(f_a,-2,2, ylab='Función (a)')
+```
+
+
+```{r}
+n=10000000
+a=-2
+b=2
+u<-runif(n)
+#Se hace el cálculo para cada valor con la respectiva sustitución
+v<- (b-a)*f_a(a+(b-a)*u)
+mean(v)
+```
+```{r}
+#Valor calculado por la funcion de integrar de R
+integrate(f_a,lower = -2,upper = 2) 
+```
+
+b) $\int_{0}^{\infty} x(1+x^2)^{-2} \, dx$
+
+Se utiliza la sustitución $x=\frac{1}{y}-1$ con lo cual queda $\int_{0}^{1} \frac{f(\frac{1}{y}-1)}{y^2} \, dy$.
+
+```{r}
+f_b <- function(x){
+  x*(1+x^2)^(-2)
+}
+
+```
+
+```{r}
+curve(f_b,0,20, ylab='Función (b)')
+```
+
+```{r}
+n=10000000
+u<-runif(n)
+v<- f_b((1/u)-1)/u^2
+mean(v)
+```
+```{r}
+#Valor calculado por la funcion de integrar de R
+integrate(f_b,lower = 0,upper = Inf) 
+```
+c) $\int_{-\infty}^{\infty} e^{-x^2} \, dx$
+
+Como la función es simétrica respecto al eje y, se puede aprovechar para calcular la integral en el intervalo $[0,1]$ de igual forma que en el punto b) y luego multiplicar este resultado por 2.
+
+```{r}
+f_c <- function(x){
+  exp(-x^2)
+}
+
+```
+
+```{r}
+curve(f_c,-20,20, ylab='Función (c)')
+```
+
+```{r}
+n=10000000
+u<-runif(n)
+v<- f_c((1/u)-1)/u^2
+2*mean(v)
+```
+
+```{r}
+#Valor calculado por la funcion de integrar de R
+integrate(f_c,lower = -Inf,upper = Inf) 
+```

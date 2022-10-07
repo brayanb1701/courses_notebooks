@@ -1,0 +1,40 @@
+---
+title: "Números aleatorios"
+subtitle: Simulación Digital
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+  html_notebook: default
+---
+
+2170688- Brayan Rodolfo Barajas Ochoa
+
+
+```{r}
+met.cong.lin<-function(x0,a,c,m,n){
+  xn=numeric(n)
+  xn[1]=x0
+  for(i in 1:n) {
+    xn[i+1]=(a*xn[i]+c) %% m
+  }
+  xn/(m-1)
+}
+```
+
+```{r}
+n1=met.cong.lin(27,17,43,100,20)
+n1
+
+```
+```{r}
+
+for(i in 1:4){
+  n=met.cong.lin(i,13,0,64,20)
+  print(n)
+}
+
+
+```
+
+
